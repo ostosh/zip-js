@@ -39,7 +39,7 @@
 	var ERR_READ_DATA = "Error while reading file data.";
 	var ERR_DUPLICATED_NAME = "File already exists.";
 	var CHUNK_SIZE = 512 * 1024;
-	
+
 	var TEXT_PLAIN = "text/plain";
 
 	var appendABViewSupported;
@@ -73,7 +73,7 @@
 		}
 		return table;
 	})();
-	
+
 	// "no-op" codec
 	function NOOP() {}
 	NOOP.prototype.append = function append(bytes, onprogress) {
@@ -296,7 +296,35 @@
 	BlobWriter.prototype = new Writer();
 	BlobWriter.prototype.constructor = BlobWriter;
 
-	/** 
+	function FileWriter(contentType, fileName) {
+		var blob, that = this;
+
+		function init(callback) {
+			blob = new Blob([], {
+				type : contentType
+			});
+			callback();
+		}
+
+		function writeUint8Array(array, callback) {
+			blob = new Blob([ blob, appendABViewSupported ? array : array.buffer ], {
+				type : contentType
+			});
+			callback();
+		}
+
+		function getData(callback) {
+			callback(new File([blob], fileName, { type: contentType }));
+		}
+
+		that.init = init;
+		that.writeUint8Array = writeUint8Array;
+		that.getData = getData;
+	}
+	FileWriter.prototype = new Writer();
+	FileWriter.prototype.constructor = FileWriter;
+
+	/**
 	 * inflate/deflate core functions
 	 * @param worker {Worker} web worker for the task.
 	 * @param initialMessage {Object} initial message to be sent to the worker. should contain
@@ -368,7 +396,7 @@
 					var msg = index === 0 ? initialMessage : {sn : sn};
 					msg.type = 'append';
 					msg.data = array;
-					
+
 					// posting a message with transferables will fail on IE10
 					try {
 						worker.postMessage(msg, [array.buffer]);
@@ -926,6 +954,7 @@
 		Data64URIReader : Data64URIReader,
 		TextReader : TextReader,
 		BlobWriter : BlobWriter,
+		FileWriter : FileWriter,
 		Data64URIWriter : Data64URIWriter,
 		TextWriter : TextWriter,
 		createReader : function(reader, callback, onerror) {
