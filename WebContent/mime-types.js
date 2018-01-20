@@ -26,7 +26,7 @@
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function() {
+(function(obj) {
 	"use strict";
 	var table = {
 		"application" : {
@@ -994,9 +994,9 @@
 		return mimeTypes;
 	})();
 
-	zip.getMimeType = function(filename) {
+	obj.getMimeType = function(filename) {
 		var defaultValue = "application/octet-stream";
 		return filename && mimeTypes[filename.split(".").pop().toLowerCase()] || defaultValue;
 	};
 
-})();
+})(this);
