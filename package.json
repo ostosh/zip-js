@@ -1,0 +1,12 @@
+{
+  "name": "zip-js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ostosh/zip.js.git"
+  },
+  "scripts": {
+    "echo": "echo \"\"",
+    "env": "env"
+  },
+  "version": "0.0.2"
+}
