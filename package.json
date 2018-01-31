@@ -4,7 +4,6 @@
     "type": "git",
     "url": "git://github.com/ostosh/zip.js.git"
   },
-  "typings": "./index.d.ts",
   "scripts": {
     "echo": "echo \"\"",
     "env": "env"
